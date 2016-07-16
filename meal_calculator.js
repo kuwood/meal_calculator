@@ -1,5 +1,6 @@
 var tax = 0.06;
 
+//menu object with item/prices
 var menu = {
   burger: 5.6,
   fries: 2.9,
@@ -9,6 +10,7 @@ var menu = {
   sandwich: 4.5
 };
 
+//patron constructor that tracks the whole meal and has a method to add dishes
 var Patron = function() {
   this.meal = [];
   this.addDish = function(dish) {
@@ -17,6 +19,7 @@ var Patron = function() {
   this.tip = 0;
 };
 
+//cost of just the menu items
 Patron.prototype.subTotal = function() {
   var subTotalCost = 0;
   this.meal.forEach(function(item) {
@@ -25,24 +28,28 @@ Patron.prototype.subTotal = function() {
   return subTotalCost;
 };
 
+//the overall amount due including tax and tip
 Patron.prototype.total = function() {
   return this.tip + this.subTotal() * (1 + tax);
 };
 
+//creates a bill by supplying an array of patrons
 var Bill = function(patronArray) {
   this.patrons = patronArray;
-  this.subTotal = function() {
+  this.total = function() {
     var billSubTotal = 0;
     var total = 0;
     var tip = 0.2;
     var totalTip = 0;
+    //add each patrons subTotal to the bills subTotal
     patronArray.forEach(function(patron) {
       billSubTotal += patron.subTotal();
-      console.log(patron);
     });
+    //calculate subTotal with tax
     total = billSubTotal + (billSubTotal * tax);
     totalTip = total * tip;
     total += totalTip;
+    //calculate tip due for each patron
     patronArray.forEach(function(patron) {
       patron.tip = totalTip / patronArray.length;
     });
@@ -50,6 +57,7 @@ var Bill = function(patronArray) {
   };
 };
 
+//sample data
 var keith = new Patron();
 var kai = new Patron();
 var mario = new Patron();
@@ -63,7 +71,7 @@ mario.addDish("milkshake");
 mario.addDish("milkshake");
 mario.addDish("milkshake");
 mario.addDish("salad");
-console.log(giveBill.subTotal());
+console.log(giveBill.total());
 console.log(keith.total());
 console.log(mario.total());
 console.log(kai.total());
